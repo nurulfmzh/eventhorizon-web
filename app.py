@@ -29,19 +29,25 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        if request.form['username'] == 'admin' and request.form['password'] == 'password':
-            session['organizer'] = True
+        username = request.form['username']
+        password = hashlib.sha256(request.form['password'].encode()).hexdigest()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM Organizers WHERE username=? AND password=?", (username, password))
+        organizer = cursor.fetchone()
+        if organizer:
+            session['organizer'] = organizer[0]
             return redirect(url_for('dashboard'))
         else:
             return 'Invalid credentials'
     return render_template('login.html')
+
 
 @app.route('/dashboard')
 def dashboard():
     if not session.get('organizer'):
         return redirect(url_for('login'))
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, date, description FROM Events")
+    cursor.execute("SELECT id, name, date, description, location, capacity FROM Events")
     events = cursor.fetchall()
     return render_template('dashboard.html', events=events)
 
@@ -52,8 +58,13 @@ def create_event():
     name = request.form['name']
     date = request.form['date']
     desc = request.form['description']
+    location = request.form['location']
+    capacity = request.form['capacity']
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Events (name, date, description) VALUES (?, ?, ?)", (name, date, desc))
+    cursor.execute("""
+        INSERT INTO Events (name, date, description, location, capacity)
+        VALUES (?, ?, ?, ?, ?)
+    """, (name, date, desc, location, capacity))
     conn.commit()
     return redirect(url_for('dashboard'))
 
@@ -66,17 +77,6 @@ def delete_event(event_id):
     conn.commit()
     return redirect(url_for('dashboard'))
 
-@app.route('/register/<int:event_id>', methods=['GET', 'POST'])
-def register(event_id):
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO Attendees (event_id, name, email) VALUES (?, ?, ?)", (event_id, name, email))
-        conn.commit()
-        return 'You have successfully registered!'
-    return render_template('register.html', event_id=event_id)
-
 @app.route('/edit_event/<int:event_id>', methods=['GET', 'POST'])
 def edit_event(event_id):
     if not session.get('organizer'):
@@ -86,13 +86,43 @@ def edit_event(event_id):
         name = request.form['name']
         date = request.form['date']
         desc = request.form['description']
-        cursor.execute("UPDATE Events SET name=?, date=?, description=? WHERE id=?", (name, date, desc, event_id))
+        location = request.form['location']
+        capacity = request.form['capacity']
+        cursor.execute("""
+            UPDATE Events
+            SET name=?, date=?, description=?, location=?, capacity=?
+            WHERE id=?
+        """, (name, date, desc, location, capacity, event_id))
         conn.commit()
         return redirect(url_for('dashboard'))
     else:
-        cursor.execute("SELECT name, date, description FROM Events WHERE id=?", (event_id,))
+        cursor.execute("SELECT name, date, description, location, capacity FROM Events WHERE id=?", (event_id,))
         event = cursor.fetchone()
         return render_template('edit_event.html', event=event, event_id=event_id)
+
+@app.route('/register/<int:event_id>', methods=['GET', 'POST'])
+def register(event_id):
+    if not session.get('attendee_id'):
+        return redirect(url_for('attendee_login', next=event_id))  # Redirect with optional 'next' param
+
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        attendee_id = session['attendee_id']
+        # Check if already registered
+        cursor.execute("SELECT id FROM Attendees WHERE event_id=? AND user_id=?", (event_id, attendee_id))
+        existing = cursor.fetchone()
+        if existing:
+            return 'You are already registered for this event.'
+
+        cursor.execute("INSERT INTO Attendees (event_id, user_id) VALUES (?, ?)", (event_id, attendee_id))
+        conn.commit()
+        return 'You have successfully registered!'
+
+    # Fetch event info to show in template
+    cursor.execute("SELECT name FROM Events WHERE id=?", (event_id,))
+    event = cursor.fetchone()
+    return render_template('register_event.html', event=event, event_id=event_id)
 
 @app.route('/logout')
 def logout():

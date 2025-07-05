@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EventHorizon - Events</title>
+</head>
+<body>
+    <h1>Upcoming Events</h1>
+    <ul>
+    {% for e in events %}
+        <li>
+            <strong>{{ e[1] }}</strong><br>
+            Date: {{ e[2] }}<br>
+            Description: {{ e[3] }}<br>
+            <a href="{{ url_for('register', event_id=e[0]) }}">Register</a>
+        </li>
+        <hr>
+    {% endfor %}
+    </ul>
+    <a href="{{ url_for('login') }}">Organizer Login</a>
+</body>
+</html>

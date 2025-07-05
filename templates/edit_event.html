@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Event</title>
+</head>
+<body>
+    <h1>Edit Event</h1>
+    <form method="post">
+        <label>Name:</label><br>
+        <input type="text" name="name" value="{{ event[0] }}"><br>
+        <label>Date (YYYY-MM-DD):</label><br>
+        <input type="text" name="date" value="{{ event[1] }}"><br>
+        <label>Description:</label><br>
+        <textarea name="description">{{ event[2] }}</textarea><br><br>
+        <button type="submit">Update Event</button>
+    </form>
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

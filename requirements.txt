@@ -1,4 +1,4 @@
 Flask==2.2.2
-pyodbc==4.0.39
 Werkzeug==2.2.3
 gunicorn
+pyodbc==4.0.39

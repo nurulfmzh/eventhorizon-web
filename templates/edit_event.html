@@ -1,19 +1,109 @@
-<h2>Edit Event</h2>
-<form method="post">
-    <label>Event Name:</label>
-    <input type="text" name="name" value="{{ event[0] }}" required>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Event</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-    <label>Date:</label>
-    <input type="date" name="date" value="{{ event[1] }}" required>
+        .edit-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 500px;
+        }
 
-    <label>Description:</label>
-    <textarea name="description" rows="3" required>{{ event[2] }}</textarea>
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
 
-    <label>Location:</label>
-    <input type="text" name="location" value="{{ event[3] }}" required>
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+        }
 
-    <label>Capacity:</label>
-    <input type="number" name="capacity" value="{{ event[4] }}" required>
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
 
-    <button type="submit">Save Changes</button>
-</form>
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 12px;
+            background-color: #4a6ee0;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3f5ccc;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4a6ee0;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-container">
+        <h2>Edit Event</h2>
+        <form method="post">
+            <label>Event Name:</label>
+            <input type="text" name="name" value="{{ event[0] }}" required>
+
+            <label>Date:</label>
+            <input type="date" name="date" value="{{ event[1] }}" required>
+
+            <label>Description:</label>
+            <textarea name="description" rows="3" required>{{ event[2] }}</textarea>
+
+            <label>Location:</label>
+            <input type="text" name="location" value="{{ event[3] }}" required>
+
+            <label>Capacity:</label>
+            <input type="number" name="capacity" value="{{ event[4] }}" required>
+
+            <button type="submit">Save Changes</button>
+        </form>
+        <a class="back-link" href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+    </div>
+</body>
+</html>

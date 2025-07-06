@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register for Event</title>
+    <title>Attendee Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,22 +20,32 @@
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             color: #2c3e50;
         }
 
-        p {
-            text-align: center;
-            font-size: 15px;
-            margin-bottom: 30px;
+        label {
+            display: block;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
         }
 
         button {
+            margin-top: 25px;
             width: 100%;
             padding: 12px;
             background-color: #4a6ee0;
@@ -50,30 +60,39 @@
             background-color: #3f5ccc;
         }
 
-        .back-link {
-            display: block;
-            margin-top: 20px;
+        .link {
+            margin-top: 15px;
             text-align: center;
-            text-decoration: none;
-            color: #4a6ee0;
             font-size: 14px;
         }
 
-        .back-link:hover {
+        .link a {
+            color: #4a6ee0;
+            text-decoration: none;
+        }
+
+        .link a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <h2>Register for Event</h2>
-        <p>You are registering for <strong>{{ event[0] }}</strong></p>
-
+        <h2>Attendee Login</h2>
         <form method="post">
-            <button type="submit">Confirm Registration</button>
-        </form>
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required>
 
-        <a href="home.html" class="back-link">← Back to Events</a>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Login</button>
+        </form>
+        <div class="link">
+            New user? <a href="{{ url_for('attendee_register') }}">Register here</a>
+            <p><a href="{{ url_for('home') }}" class="back-link">← Back to Home</a></p>
+        </div>
+        
     </div>
 </body>
 </html>

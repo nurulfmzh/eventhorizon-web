@@ -100,7 +100,7 @@
                     <td>{{ e[3] }}</td>
                     <td>{{ e[4] }}</td>
                     <td>{{ e[5] }}</td>
-                    <td><a class="register-link" href="{{ url_for('register', event_id=e[0]) }}">Register</a></td>
+                    <td><a class="register-link" href="{{ url_for('attendee_register_event', event_id=e[0]) }}">Register</a></td>
                 </tr>
             {% else %}
                 <tr class="empty-row">

@@ -2,17 +2,56 @@
 <html>
 <head>
     <title>Organizer Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        input, textarea, button {
+            width: 100%;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        li {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+    </style>
 </head>
 <body>
     <h1>Organizer Dashboard</h1>
+
     <h2>Create New Event</h2>
     <form method="post" action="{{ url_for('create_event') }}">
-        <label>Name:</label><br>
-        <input type="text" name="name"><br>
-        <label>Date (YYYY-MM-DD):</label><br>
-        <input type="text" name="date"><br>
-        <label>Description:</label><br>
-        <textarea name="description"></textarea><br><br>
+        <label>Event Name</label>
+        <input type="text" name="name" required>
+
+        <label>Date:</label>
+        <input type="date" name="date" required>
+
+        <label>Description:</label>
+        <textarea name="description" rows="3" required></textarea>
+
+        <label>Location</label>
+        <input type="text" name="location" required>
+
+        <label>Capacity:</label>
+        <input type="int" name=capacity" required>
+
         <button type="submit">Create Event</button>
     </form>
 
@@ -22,14 +61,17 @@
         <li>
             <strong>{{ e[1] }}</strong><br>
             Date: {{ e[2] }}<br>
-            Description: {{ e[3] }}<br>
+            Description: {{ e[3] }}
             <form method="post" action="{{ url_for('delete_event', event_id=e[0]) }}">
                 <button type="submit">Delete</button>
             </form>
         </li>
         <hr>
+    {% else %}
+        <li>No events found.</li>
     {% endfor %}
     </ul>
+
     <a href="{{ url_for('logout') }}">Logout</a>
 </body>
 </html>

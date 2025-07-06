@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import pyodbc
 
 app = Flask(__name__)
-app.secret_key = '1234@dmin'  # Change this to a strong secret
+app.secret_key = '1234@dmin' 
 
 # Azure SQL connection
 server = 'sql-eventhorizon-server.database.windows.net'
@@ -30,7 +30,7 @@ def home():
 def login():
     if request.method == 'POST':
         username = request.form['username']
-        password = hashlib.sha256(request.form['password'].encode()).hexdigest()
+        password = request.form['password']
         cursor = conn.cursor()
         cursor.execute("SELECT id FROM Organizers WHERE username=? AND password=?", (username, password))
         organizer = cursor.fetchone()
@@ -40,7 +40,6 @@ def login():
         else:
             return 'Invalid credentials'
     return render_template('login.html')
-
 
 @app.route('/dashboard')
 def dashboard():
